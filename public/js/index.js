@@ -14,19 +14,21 @@ socket.on('newEmail', function(email) {
 })
 
 socket.on('newMessage', function(message) {
+  const formattedTime = moment(message.createdAt).format('h:mm a')
   console.log(message)
   const li = document.createElement('li')
-  li.textContent = `${message.from}: ${message.text}`
+  li.textContent = `${message.from} [${formattedTime}]: ${message.text}`
   document.getElementById('messages').appendChild(li)
 })
 
 socket.on('newLocationMessage', function(message) {
+  const formattedTime = moment(message.createdAt).format('h:mm a')
   const li = document.createElement('li')
   const a = document.createElement('a')
   a.setAttribute('href', message.url)
   a.setAttribute('target', '_blank')
   a.textContent = 'My current position'
-  li.textContent = `${message.from}: `
+  li.textContent = `${message.from} [${formattedTime}]: `
   li.appendChild(a)
   document.getElementById('messages').appendChild(li)
 })
