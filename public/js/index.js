@@ -15,22 +15,24 @@ socket.on('newEmail', function(email) {
 
 socket.on('newMessage', function(message) {
   const formattedTime = moment(message.createdAt).format('h:mm a')
-  console.log(message)
-  const li = document.createElement('li')
-  li.textContent = `${message.from} [${formattedTime}]: ${message.text}`
-  document.getElementById('messages').appendChild(li)
+  const template = document.getElementById('message-template').textContent
+  const html = Mustache.render(template, {
+    text: message.text,
+    from: message.from,
+    createdAt: formattedTime,
+  })
+  document.getElementById('messages').innerHTML += html
 })
 
 socket.on('newLocationMessage', function(message) {
   const formattedTime = moment(message.createdAt).format('h:mm a')
-  const li = document.createElement('li')
-  const a = document.createElement('a')
-  a.setAttribute('href', message.url)
-  a.setAttribute('target', '_blank')
-  a.textContent = 'My current position'
-  li.textContent = `${message.from} [${formattedTime}]: `
-  li.appendChild(a)
-  document.getElementById('messages').appendChild(li)
+  const template = document.getElementById('location-message-template').textContent
+  const html = Mustache.render(template, {
+    from: message.from,
+    createdAt: formattedTime,
+    url: message.url,
+  })
+  document.getElementById('messages').innerHTML += html  
 })
 
 
