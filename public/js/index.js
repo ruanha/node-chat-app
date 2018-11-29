@@ -1,16 +1,33 @@
 let socket = io()
 
+function scrollToBottom() {
+  const messages = document.getElementById('messages')
+  const newMessage = messages.lastElementChild;
+  const prevMessage = newMessage.previousElementSibling;
+ 
+  const clientHeight = messages.clientHeight;
+  const scrollTop = messages.scrollTop;
+  const scrollHeight = messages.scrollHeight;
+ 
+  const newMessageStyle = window.getComputedStyle(newMessage, null);
+  const newMessageHeight = parseInt(newMessageStyle.getPropertyValue("height"));
+  let prevMessageHeight = 0;
+  if (prevMessage) {
+    const prevMessageStyle = window.getComputedStyle(prevMessage, null);
+    prevMessageHeight = parseInt(prevMessageStyle.getPropertyValue("height"));
+  }
+ 
+  if ((clientHeight + scrollTop + newMessageHeight + prevMessageHeight) >= scrollHeight) {
+    messages.scrollTop = scrollHeight;
+  }
+}
+
 socket.on('connect', function() {
   console.log('Connected to server')
-
 })
 
 socket.on('disconnect', function() {
   console.log('Disconnected from server')
-})
-
-socket.on('newEmail', function(email) {
-  console.log(email)
 })
 
 socket.on('newMessage', function(message) {
@@ -22,6 +39,7 @@ socket.on('newMessage', function(message) {
     createdAt: formattedTime,
   })
   document.getElementById('messages').innerHTML += html
+  scrollToBottom()
 })
 
 socket.on('newLocationMessage', function(message) {
@@ -32,7 +50,8 @@ socket.on('newLocationMessage', function(message) {
     createdAt: formattedTime,
     url: message.url,
   })
-  document.getElementById('messages').innerHTML += html  
+  document.getElementById('messages').innerHTML += html
+  scrollToBottom()
 })
 
 
