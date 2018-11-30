@@ -24,6 +24,18 @@ function scrollToBottom() {
 
 socket.on('connect', function() {
   console.log('Connected to server')
+  const urlParams = new URLSearchParams(window.location.search);
+  const name = urlParams.get('name')
+  const room = urlParams.get('room')
+
+  socket.emit('join', { name, room }, function(err) {
+    if (err) {
+      alert(err)
+      window.location.href = '/'
+    } else {
+      console.log('No error')
+    }
+  })
 })
 
 socket.on('disconnect', function() {
@@ -54,6 +66,17 @@ socket.on('newLocationMessage', function(message) {
   scrollToBottom()
 })
 
+socket.on('updateUserList', function(users) {
+  let ol = document.createElement('ol')
+
+  users.forEach(function(user) {
+    let li = document.createElement('li')
+    li.textContent = user
+    ol.appendChild(li)
+  })
+  document.getElementById('users').innerHTML = ''
+  document.getElementById('users').appendChild(ol)
+})
 
 document.getElementById('message-form').addEventListener('submit', function(e) {
   e.preventDefault()
