@@ -83,8 +83,7 @@ document.getElementById('message-form').addEventListener('submit', function(e) {
   const messageTextbox = document.getElementById('message')
 
   socket.emit('createMessage', {
-    from: 'User',
-    text: messageTextbox.value
+    text: messageTextbox.value,
   }, function() {
     messageTextbox.value = ''
   })
