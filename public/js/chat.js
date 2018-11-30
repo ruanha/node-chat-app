@@ -26,7 +26,7 @@ socket.on('connect', function() {
   console.log('Connected to server')
   const urlParams = new URLSearchParams(window.location.search);
   const name = urlParams.get('name')
-  const room = urlParams.get('room')
+  const room = urlParams.get('room').toLowerCase()
 
   socket.emit('join', { name, room }, function(err) {
     if (err) {
